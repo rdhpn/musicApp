@@ -8,7 +8,7 @@ import androidx.appcompat.app.AlertDialog
 import com.example.musicApp.databinding.FragmentDetailsBinding
 import com.example.musicApp.utils.BaseFragment
 import com.example.musicApp.utils.UIState
-import com.example.musicapp.model.domain.Rock
+import com.example.musicApp.model.domain.Rock
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer

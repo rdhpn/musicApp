@@ -2,9 +2,9 @@ package com.example.musicApp.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.musicapp.model.domain.Classic
-import com.example.musicapp.model.domain.Pop
-import com.example.musicapp.model.domain.Rock
+import com.example.musicApp.model.domain.Classic
+import com.example.musicApp.model.domain.Pop
+import com.example.musicApp.model.domain.Rock
 
 @Database(
     entities = [

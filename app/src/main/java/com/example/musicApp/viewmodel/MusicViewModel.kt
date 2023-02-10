@@ -1,21 +1,14 @@
 package com.example.musicApp.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.musicApp.model.MusicResponse
-import com.example.musicapp.model.domain.Rock
 import com.example.musicApp.rest.MusicRepository
 import com.example.musicApp.utils.UIState
-import com.example.musicapp.model.domain.Classic
-import com.example.musicapp.model.domain.Pop
-import com.example.musicapp.model.domain.Track
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

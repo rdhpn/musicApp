@@ -4,9 +4,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.musicapp.model.domain.Classic
-import com.example.musicapp.model.domain.Pop
-import com.example.musicapp.model.domain.Rock
+import com.example.musicApp.model.domain.Classic
+import com.example.musicApp.model.domain.Pop
+import com.example.musicApp.model.domain.Rock
 
 @Dao
 interface MusicDAO {

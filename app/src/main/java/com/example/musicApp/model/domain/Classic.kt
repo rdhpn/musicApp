@@ -1,4 +1,4 @@
-package com.example.musicapp.model.domain
+package com.example.musicApp.model.domain
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
