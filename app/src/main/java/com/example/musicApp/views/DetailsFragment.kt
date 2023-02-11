@@ -29,25 +29,37 @@ class DetailsFragment : BaseFragment() {
         super.onStart()
         initializePlayer()
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        musicViewModel.fragmentState = true
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        musicViewModel.fragmentState = false
+    }
     private fun initializePlayer() {
         player = ExoPlayer.Builder(this.requireContext())
             .build()
             .also { player ->
                 binding.videoView.player = player
 //                if (musicViewModel.selectedTrackPreviewUrl != null)
-try {
-    val urlMusic = Uri.parse(musicViewModel.selectedTrackPreviewUrl.value!!.toString())
-                val mediaItem: MediaItem = MediaItem.fromUri(urlMusic)
-                player.setMediaItem(mediaItem)
-                player.playWhenReady = playWhenReady
-                player.seekTo(currentItem, playBackPosition)
-                player.prepare()
+                try {
+                    val urlMusic =
+                        Uri.parse(musicViewModel.selectedTrackPreviewUrl.value!!.toString())
+                    val mediaItem: MediaItem = MediaItem.fromUri(urlMusic)
+                    player.setMediaItem(mediaItem)
+                    player.playWhenReady = playWhenReady
+                    player.seekTo(currentItem, playBackPosition)
+                    player.prepare()
 
-} catch (error: NullPointerException)
-{
-    Log.d(TAG, "initializePlayer: Error")}
+                } catch (error: NullPointerException) {
+                    Log.d(TAG, "initializePlayer: Error")
+                }
             }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -73,6 +85,7 @@ try {
         }
         player = null
     }
+
     override fun onStop() {
         super.onStop()
         releasePlayer()
