@@ -16,7 +16,7 @@ import com.example.musicApp.views.adapter.MusicAdapter
 
 private const val TAG = "RocksFragment"
 
-class MusicListFragment : BaseFragment() {
+class RocksFragment : BaseFragment() {
 
     private val binding by lazy {
         FragmentCommonViewBinding.inflate(layoutInflater)
@@ -25,6 +25,7 @@ class MusicListFragment : BaseFragment() {
     private val musicAdapter by lazy {
         MusicAdapter {
             // Bind the player to the view.
+//            musicViewModel.openRocksFragment = true
             musicViewModel.selectTrack(it)
             findNavController().navigate(R.id.action_RockFragment_to_DetailedFragment)
         }
@@ -34,6 +35,7 @@ class MusicListFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.d(TAG, "onCreateView: ")
         // Inflate the layout for this fragment
 
         binding.musicRv.apply {
@@ -58,5 +60,20 @@ class MusicListFragment : BaseFragment() {
         }
 
         return binding.root
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        musicViewModel.fragmentState = true
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        musicViewModel.fragmentState = false
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy: ")
+//        musicViewModel.openRocksFragment = false
     }
 }

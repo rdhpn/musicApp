@@ -1,6 +1,6 @@
 
 
-package com.example.musicApp.views.rocks
+package com.example.musicApp.views.classics
 
 import android.os.Bundle
 import androidx.navigation.fragment.findNavController
@@ -27,6 +27,7 @@ class ClassicsFragment : BaseFragment() {
         MusicAdapter {
             // Bind the player to the view.
 
+//            musicViewModel.openClassicsFragment = true
             musicViewModel.selectTrack(it)
             findNavController().navigate(R.id.action_ClassicsFragment_to_DetailedFragment)
         }
@@ -37,6 +38,7 @@ class ClassicsFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        Log.d(TAG, "onCreateView: ")
 
         binding.musicRv.apply {
             layoutManager  = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -44,7 +46,7 @@ class ClassicsFragment : BaseFragment() {
             adapter = musicAdapter
         }
 
-        musicViewModel.rock.observe(viewLifecycleOwner)  { state ->
+        musicViewModel.classic.observe(viewLifecycleOwner)  { state ->
             when(state) {
                 is UIState.LOADING -> {}
                 is UIState.SUCCESS<MusicResponse> -> {
@@ -59,5 +61,21 @@ class ClassicsFragment : BaseFragment() {
         }
 
         return binding.root
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        musicViewModel.fragmentState = true
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        musicViewModel.fragmentState = false
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy: ")
+//        musicViewModel.openClassicsFragment= false
     }
 }

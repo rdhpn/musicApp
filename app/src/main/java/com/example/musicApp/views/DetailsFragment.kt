@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import com.example.musicApp.databinding.FragmentDetailsBinding
 import com.example.musicApp.utils.BaseFragment
 import androidx.media3.common.MediaItem
@@ -44,7 +43,6 @@ class DetailsFragment : BaseFragment() {
             .build()
             .also { player ->
                 binding.videoView.player = player
-//                if (musicViewModel.selectedTrackPreviewUrl != null)
                 try {
                     val urlMusic =
                         Uri.parse(musicViewModel.selectedTrackPreviewUrl.value!!.toString())
@@ -56,6 +54,9 @@ class DetailsFragment : BaseFragment() {
 
                 } catch (error: NullPointerException) {
                     Log.d(TAG, "initializePlayer: Error")
+                    showError(error.localizedMessage!!) {
+                        // todo define an action
+                    }
                 }
             }
     }

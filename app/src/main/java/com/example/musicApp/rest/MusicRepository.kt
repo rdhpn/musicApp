@@ -8,6 +8,8 @@ import javax.inject.Inject
 
 interface MusicRepository {
     fun getRocks(): Flow<UIState<MusicResponse>>
+    fun getPops(): Flow<UIState<MusicResponse>>
+    fun getClassics(): Flow<UIState<MusicResponse>>
 //    fun getPreviewUrl(): Flow<UIState<Track>>
 //    fun getRockById(trackId: String): Flow<UIState<Rock>>
 }
@@ -25,6 +27,40 @@ class MusicRepositoryImpl @Inject constructor(
                 response.body()?.let {
                    emit(UIState.SUCCESS(it))
                 } ?: throw NullRockResponse()
+            } else {
+                throw FailureResponse(response.errorBody()?.string())
+            }
+        } catch (e: Exception) {
+            emit(UIState.ERROR(e))
+        }
+    }
+
+    override fun getPops(): Flow<UIState<MusicResponse>> = flow {
+        emit(UIState.LOADING)
+
+        try {
+            val response = musicApi.getListBy("pops","music","song", "50")
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    emit(UIState.SUCCESS(it))
+                } ?: throw NullPopsResponse()
+            } else {
+                throw FailureResponse(response.errorBody()?.string())
+            }
+        } catch (e: Exception) {
+            emit(UIState.ERROR(e))
+        }
+    }
+
+    override fun getClassics(): Flow<UIState<MusicResponse>> = flow {
+        emit(UIState.LOADING)
+
+        try {
+            val response = musicApi.getListBy("classick","music","song", "50")
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    emit(UIState.SUCCESS(it))
+                } ?: throw NullClassicsResponse()
             } else {
                 throw FailureResponse(response.errorBody()?.string())
             }

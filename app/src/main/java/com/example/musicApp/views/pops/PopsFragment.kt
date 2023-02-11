@@ -1,6 +1,7 @@
 package com.example.musicApp.views.pops
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import com.example.musicApp.utils.BaseFragment
 import com.example.musicApp.utils.UIState
 import com.example.musicApp.views.adapter.MusicAdapter
 
+private const val TAG = "PopsFragment"
 class PopsFragment : BaseFragment() {
 
     private val binding by lazy {
@@ -23,8 +25,9 @@ class PopsFragment : BaseFragment() {
         MusicAdapter {
             // Bind the player to the view.
 
+//            musicViewModel.openPopsFragment = true
             musicViewModel.selectTrack(it)
-            findNavController().navigate(R.id.action_ClassicsFragment_to_DetailedFragment)
+            findNavController().navigate(R.id.action_PopsFragment_to_DetailedFragment)
         }
     }
 
@@ -32,6 +35,7 @@ class PopsFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.d(TAG, "onCreateView: ")
         // Inflate the layout for this fragment
 
         binding.musicRv.apply {
@@ -41,7 +45,7 @@ class PopsFragment : BaseFragment() {
             adapter = musicAdapter
         }
 
-        musicViewModel.rock.observe(viewLifecycleOwner)  { state ->
+        musicViewModel.pop.observe(viewLifecycleOwner)  { state ->
             when(state) {
                 is UIState.LOADING -> {}
                 is UIState.SUCCESS<MusicResponse> -> {
@@ -56,5 +60,19 @@ class PopsFragment : BaseFragment() {
         }
 
         return binding.root
+    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        musicViewModel.fragmentState = true
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        musicViewModel.fragmentState = false
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy: ")
+//        musicViewModel.openPopsFragment = false
     }
 }
