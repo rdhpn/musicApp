@@ -1,32 +1,30 @@
 package com.example.musicApp.views.pops
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicApp.R
+import com.example.musicApp.databinding.FragmentCommonViewBinding
+import com.example.musicApp.model.MusicResponse
+import com.example.musicApp.utils.BaseFragment
+import com.example.musicApp.utils.UIState
+import com.example.musicApp.views.adapter.MusicAdapter
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class PopsFragment : BaseFragment() {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [PopsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class PopsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private val binding by lazy {
+        FragmentCommonViewBinding.inflate(layoutInflater)
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    private val musicAdapter by lazy {
+        MusicAdapter {
+            // Bind the player to the view.
+
+            musicViewModel.selectTrack(it)
+            findNavController().navigate(R.id.action_ClassicsFragment_to_DetailedFragment)
         }
     }
 
@@ -35,26 +33,28 @@ class PopsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_common_view, container, false)
-    }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment PopsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            PopsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+        binding.musicRv.apply {
+            layoutManager  =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            setHasFixedSize(true)
+            adapter = musicAdapter
+        }
+
+        musicViewModel.rock.observe(viewLifecycleOwner)  { state ->
+            when(state) {
+                is UIState.LOADING -> {}
+                is UIState.SUCCESS<MusicResponse> -> {
+                    musicAdapter.updateItems(state.response.results ?: emptyList())
+                }
+                is UIState.ERROR -> {
+                    showError(state.error.localizedMessage) {
+                        // todo define an action
+                    }
                 }
             }
+        }
+
+        return binding.root
     }
 }

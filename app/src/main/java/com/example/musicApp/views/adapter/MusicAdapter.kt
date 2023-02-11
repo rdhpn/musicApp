@@ -1,5 +1,6 @@
 package com.example.musicApp.views.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
@@ -8,9 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicApp.R
 import com.example.musicApp.databinding.MusicItemBinding
 
+private const val TAG = "MusicAdapter"
 class MusicAdapter(
     private val itemSet: MutableList<Result> = mutableListOf(),
-    private val onItemClick: (itemId: Result) -> Unit
+    private val onItemClick: (String) -> Unit
 ) : RecyclerView.Adapter<MusicViewHolder>() {
 
     fun updateItems(newItems: List<com.example.musicApp.model.items.Result>) {
@@ -41,7 +43,7 @@ class MusicViewHolder(
     private val binding: MusicItemBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: com.example.musicApp.model.items.Result, onItemClick: (Result) -> Unit) {
+    fun bind(item: com.example.musicApp.model.items.Result, onItemClick: (String) -> Unit) {
         Glide
             .with(binding.root)
             .load(item.artworkUrl60)
@@ -53,7 +55,6 @@ class MusicViewHolder(
         binding.artistName.text = item.artistName ?: "NO NAME PROVIDED"
         binding.collectionName.text = item.collectionName ?: "NO NAME PROVIDED"
         binding.trackPrice.text = (item.trackPrice.toString() ?: "Null") + " USD"
-
-        itemView.setOnClickListener { onItemClick(item) }
+        itemView.setOnClickListener { item.previewUrl.toString()?.let(onItemClick) }
     }
 }

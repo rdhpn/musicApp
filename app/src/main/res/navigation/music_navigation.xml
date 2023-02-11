@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/RockFragment"
-        android:name="com.example.musicApp.views.rocks.RocksFragment"
+        android:name="com.example.musicApp.views.rocks.MusicListFragment"
         android:label="Music Pops"
         tools:layout="@layout/fragment_common_view">
         <action
@@ -23,7 +23,7 @@
 
     <fragment
         android:id="@+id/ClassicsFragment"
-        android:name="com.example.musicApp.views.classics.ClassicsFragment"
+        android:name="com.example.musicApp.views.rocks.MusicListFragment"
         android:label="Music Classics"
         tools:layout="@layout/fragment_common_view">
         <action
@@ -39,7 +39,7 @@
 
     <fragment
         android:id="@+id/PopsFragment"
-        android:name="com.example.musicApp.views.pops.PopsFragment"
+        android:name="com.example.musicApp.views.rocks.MusicListFragment"
         android:label="Music Pops"
         tools:layout="@layout/fragment_common_view">
         <action

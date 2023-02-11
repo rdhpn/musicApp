@@ -1,5 +1,6 @@
 package com.example.musicApp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val TAG = "MusicViewModel"
 @HiltViewModel
 class MusicViewModel @Inject constructor(
     private val musicRepository: MusicRepository,
@@ -29,8 +31,8 @@ class MusicViewModel @Inject constructor(
     private val _rock: MutableLiveData<UIState<MusicResponse>> = MutableLiveData(UIState.LOADING)
     val rock: LiveData<UIState<MusicResponse>> get() = _rock
 
-    private val _trackPreviewUrl: MutableLiveData<UIState<String>> = MutableLiveData(UIState.LOADING)
-    val trackPreviewUrl: LiveData<UIState<String>> get() = _trackPreviewUrl
+    private val _selectedTrackPreviewUrl: MutableLiveData<String> = MutableLiveData("")
+    val selectedTrackPreviewUrl: LiveData<String> get() = _selectedTrackPreviewUrl
 //    private val _rockDetails: MutableLiveData<UIState<Rock>?> = MutableLiveData(UIState.LOADING)
 //    val rockDetails: LiveData<UIState<Rock>> get() = _rockDetails
 
@@ -53,15 +55,10 @@ class MusicViewModel @Inject constructor(
             }
         }
     }
+    fun selectTrack(previewUrl: String){
+        _selectedTrackPreviewUrl.value = previewUrl
+    }
 
-//    fun getTrackPreviewUrl(previewUrl: String? = null) {
-//       previewUrl ?.let {
-//            viewModelScope.launch(ioDispatcher) {
-////                    _trackPreviewUrl.postValue(UIState)
-//                _trackPreviewUrl = MutableLiveData<UIState<it>>
-//            }
-//        }
-//    }
 //    fun getRocks(id: String? = null) {
 //        id?.let {
 //            viewModelScope.launch(ioDispatcher) {

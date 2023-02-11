@@ -15,7 +15,8 @@ import com.example.musicApp.utils.UIState
 import com.example.musicApp.views.adapter.MusicAdapter
 
 private const val TAG = "RocksFragment"
-class RocksFragment : BaseFragment() {
+
+class MusicListFragment : BaseFragment() {
 
     private val binding by lazy {
         FragmentCommonViewBinding.inflate(layoutInflater)
@@ -24,10 +25,7 @@ class RocksFragment : BaseFragment() {
     private val musicAdapter by lazy {
         MusicAdapter {
             // Bind the player to the view.
-
-//            musicViewModel.
-            if (it.previewUrl != null) previewUrl = it.previewUrl.toString()
-            Log.d(TAG, "previewURL: $previewUrl")
+            musicViewModel.selectTrack(it)
             findNavController().navigate(R.id.action_RockFragment_to_DetailedFragment)
         }
     }
@@ -39,13 +37,14 @@ class RocksFragment : BaseFragment() {
         // Inflate the layout for this fragment
 
         binding.musicRv.apply {
-            layoutManager  = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             setHasFixedSize(true)
             adapter = musicAdapter
         }
 
-        musicViewModel.rock.observe(viewLifecycleOwner)  { state ->
-            when(state) {
+        musicViewModel.rock.observe(viewLifecycleOwner) { state ->
+            when (state) {
                 is UIState.LOADING -> {}
                 is UIState.SUCCESS<MusicResponse> -> {
                     musicAdapter.updateItems(state.response.results ?: emptyList())

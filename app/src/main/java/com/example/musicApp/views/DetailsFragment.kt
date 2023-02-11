@@ -7,58 +7,52 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import com.example.musicApp.databinding.FragmentDetailsBinding
 import com.example.musicApp.utils.BaseFragment
-import com.example.musicApp.utils.UIState
-import com.example.musicApp.model.domain.Rock
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.SimpleExoPlayer
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.ExoPlayer
+import android.net.Uri;
+import android.util.Log
+
+private const val TAG = "DetailsFragment"
 
 class DetailsFragment : BaseFragment() {
+    private var player: ExoPlayer? = null
+    private var playWhenReady = true
+    private var currentItem = 0
+    private var playBackPosition = 0L
+
 
     private val binding by lazy {
         FragmentDetailsBinding.inflate(layoutInflater)
     }
 
+    override fun onStart() {
+        super.onStart()
+        initializePlayer()
+    }
+    private fun initializePlayer() {
+        player = ExoPlayer.Builder(this.requireContext())
+            .build()
+            .also { player ->
+                binding.videoView.player = player
+//                if (musicViewModel.selectedTrackPreviewUrl != null)
+try {
+    val urlMusic = Uri.parse(musicViewModel.selectedTrackPreviewUrl.value!!.toString())
+                val mediaItem: MediaItem = MediaItem.fromUri(urlMusic)
+                player.setMediaItem(mediaItem)
+                player.playWhenReady = playWhenReady
+                player.seekTo(currentItem, playBackPosition)
+                player.prepare()
+
+} catch (error: NullPointerException)
+{
+    Log.d(TAG, "initializePlayer: Error")}
+            }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        musicViewModel.rock.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is UIState.LOADING -> {}
-                is UIState.SUCCESS<*> -> {
-//                        val track = state.response as List<Rock>
-                    val player: ExoPlayer = SimpleExoPlayer.Builder(requireContext()).build()
-                    binding.exoPlayerVIew.player = player
-                    // Build the media item.
-
-                    // Build the media item.
-                    val mediaItem: MediaItem = MediaItem.fromUri(previewUrl)
-// Set the media item to be played.
-                    player.setMediaItem(mediaItem)
-// Prepare the player.
-                    player.prepare()
-// Start the playback.
-                    player.play()
-
-                }
-                is UIState.ERROR -> {
-                    AlertDialog.Builder(requireActivity())
-                        .setTitle("Error occurred")
-                        .setMessage(state.error.localizedMessage)
-                        .setPositiveButton("RETRY") { dialog, _ ->
-                            musicViewModel.getRocks()
-                            dialog.dismiss()
-                        }
-                        .setNegativeButton("DISMISS") { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .create()
-                        .show()
-                }
-            }
-        }
         return binding.root
     }
 
@@ -70,13 +64,18 @@ class DetailsFragment : BaseFragment() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        musicViewModel.fragmentState = true
+    private fun releasePlayer() {
+        player?.let {
+            playWhenReady = it.playWhenReady
+            currentItem = it.currentMediaItemIndex
+            playBackPosition = it.currentPosition
+            it.release()
+        }
+        player = null
+    }
+    override fun onStop() {
+        super.onStop()
+        releasePlayer()
     }
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        musicViewModel.fragmentState = false
-    }
 }
