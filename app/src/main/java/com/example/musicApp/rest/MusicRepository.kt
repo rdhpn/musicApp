@@ -1,6 +1,10 @@
 package com.example.musicApp.rest
 
+import com.example.musicApp.R
+import com.example.musicApp.database.MusicDAO
 import com.example.musicApp.model.MusicResponse
+import com.example.musicApp.model.domain.Rock
+import com.example.musicApp.model.domain.mapToRock
 import com.example.musicApp.utils.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -15,7 +19,8 @@ interface MusicRepository {
 }
 
 class MusicRepositoryImpl @Inject constructor(
-    private val musicApi: MusicApi
+    private val musicApi: MusicApi,
+    private var musicDAO: MusicDAO
 ) : MusicRepository {
 
     override fun getRocks(): Flow<UIState<MusicResponse>> = flow {
@@ -25,10 +30,17 @@ class MusicRepositoryImpl @Inject constructor(
             val response = musicApi.getListBy("rocks","music","song", "50")
             if (response.isSuccessful) {
                 response.body()?.let {
+                    UIState.SUCCESS(it).response.results?.let { it -> musicDAO.insertRock(it[0].mapToRock()) }
+
                    emit(UIState.SUCCESS(it))
                 } ?: throw NullRockResponse()
-            } else {
-                throw FailureResponse(response.errorBody()?.string())
+            } else if (musicDAO.getRocks().isNotEmpty()) {
+                val rock = musicDAO.getRocks()
+                emit(UIState.SUCCESS(rock as MusicResponse))
+            }
+            else
+            {
+                    throw FailureResponse(response.errorBody()?.string())
             }
         } catch (e: Exception) {
             emit(UIState.ERROR(e))

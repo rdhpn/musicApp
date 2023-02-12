@@ -7,7 +7,8 @@ import com.example.musicApp.model.items.Result
 
 @Entity
 data class Rock(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    var id: Int? = null,
     val trackId: Int,
     val artistId: Int,
     val artistName: String,
