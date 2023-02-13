@@ -8,6 +8,7 @@ import com.example.musicApp.model.items.Result
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicApp.R
 import com.example.musicApp.databinding.MusicItemBinding
+import java.util.*
 
 private const val TAG = "MusicAdapter"
 class MusicAdapter(
@@ -19,6 +20,7 @@ class MusicAdapter(
         if (itemSet != newItems) {
             itemSet.clear()
             itemSet.addAll(newItems)
+            itemSet.shuffle(Random(System.currentTimeMillis()))
 
             notifyDataSetChanged()
         }

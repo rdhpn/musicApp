@@ -60,6 +60,22 @@ class ClassicsFragment : BaseFragment() {
             }
         }
 
+        binding.swiperefresh.setOnRefreshListener {
+            binding.swiperefresh.isRefreshing = false
+            musicViewModel.classic.observe(viewLifecycleOwner) { state ->
+                when (state) {
+                    is UIState.LOADING -> {}
+                    is UIState.SUCCESS<MusicResponse> -> {
+                        musicAdapter.updateItems(state.response.results ?: emptyList())
+                    }
+                    is UIState.ERROR -> {
+                        showError(state.error.localizedMessage) {
+                            // todo define an action
+                        }
+                    }
+                }
+            }
+        }
         return binding.root
     }
 

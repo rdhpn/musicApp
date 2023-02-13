@@ -6,7 +6,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.musicApp.R
 import com.example.musicApp.databinding.FragmentCommonViewBinding
 import com.example.musicApp.model.MusicResponse
@@ -57,8 +59,24 @@ class RocksFragment : BaseFragment() {
                     }
                 }
             }
-        }
 
+            binding.swiperefresh.setOnRefreshListener {
+                binding.swiperefresh.isRefreshing = false
+                musicViewModel.rock.observe(viewLifecycleOwner) { state ->
+                    when (state) {
+                        is UIState.LOADING -> {}
+                        is UIState.SUCCESS<MusicResponse> -> {
+                            musicAdapter.updateItems(state.response.results ?: emptyList())
+                        }
+                        is UIState.ERROR -> {
+                            showError(state.error.localizedMessage) {
+                                // todo define an action
+                            }
+                        }
+                    }
+                }
+            }
+        }
         return binding.root
     }
 
@@ -71,6 +89,7 @@ class RocksFragment : BaseFragment() {
         super.onViewStateRestored(savedInstanceState)
         musicViewModel.fragmentState = false
     }
+
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "onDestroy: ")
