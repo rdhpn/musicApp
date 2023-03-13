@@ -2,13 +2,13 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/RockFragment"
+    app:startDestination="@id/PopsFragment"
     android:id="@+id/music_navigation">
 
     <fragment
-        android:id="@+id/RockFragment"
+        android:id="@+id/RocksFragment"
         android:name="com.example.musicApp.views.rocks.RocksFragment"
-        android:label="Music Pops"
+        android:label="Music Rocks"
         tools:layout="@layout/fragment_common_view">
         <action
             android:id="@+id/action_RocksFragment_to_ClassicsFragment"
@@ -31,7 +31,7 @@
             app:destination="@id/PopsFragment" />
         <action
             android:id="@+id/action_ClassicsFragment_to_RocksFragment"
-            app:destination="@id/RockFragment" />
+            app:destination="@id/RocksFragment" />
         <action
             android:id="@+id/action_ClassicsFragment_to_DetailedFragment"
             app:destination="@id/DetailedFragment" />
@@ -44,7 +44,7 @@
         tools:layout="@layout/fragment_common_view">
         <action
             android:id="@+id/action_PopsFragment_to_RocksFragment"
-            app:destination="@id/RockFragment" />
+            app:destination="@id/RocksFragment" />
         <action
             android:id="@+id/action_PopsFragment_to_ClassicsFragment"
             app:destination="@id/ClassicsFragment" />

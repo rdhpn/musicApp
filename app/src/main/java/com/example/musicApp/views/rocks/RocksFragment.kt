@@ -15,6 +15,7 @@ import com.example.musicApp.utils.UIState
 import com.example.musicApp.views.adapter.MusicAdapter
 
 private const val TAG = "RocksFragment"
+
 class RocksFragment : BaseFragment() {
 
     private val binding by lazy {
@@ -24,10 +25,8 @@ class RocksFragment : BaseFragment() {
     private val musicAdapter by lazy {
         MusicAdapter {
             // Bind the player to the view.
-
-//            musicViewModel.
-            if (it.previewUrl != null) previewUrl = it.previewUrl.toString()
-            Log.d(TAG, "previewURL: $previewUrl")
+//            musicViewModel.openRocksFragment = true
+            musicViewModel.selectTrack(it)
             findNavController().navigate(R.id.action_RockFragment_to_DetailedFragment)
         }
     }
@@ -36,16 +35,18 @@ class RocksFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.d(TAG, "onCreateView: ")
         // Inflate the layout for this fragment
 
         binding.musicRv.apply {
-            layoutManager  = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             setHasFixedSize(true)
             adapter = musicAdapter
         }
 
-        musicViewModel.rock.observe(viewLifecycleOwner)  { state ->
-            when(state) {
+        musicViewModel.rock.observe(viewLifecycleOwner) { state ->
+            when (state) {
                 is UIState.LOADING -> {}
                 is UIState.SUCCESS<MusicResponse> -> {
                     musicAdapter.updateItems(state.response.results ?: emptyList())
@@ -59,5 +60,20 @@ class RocksFragment : BaseFragment() {
         }
 
         return binding.root
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        musicViewModel.fragmentState = true
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        musicViewModel.fragmentState = false
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy: ")
+//        musicViewModel.openRocksFragment = false
     }
 }

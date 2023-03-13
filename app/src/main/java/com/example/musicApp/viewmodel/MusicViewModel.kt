@@ -1,5 +1,6 @@
 package com.example.musicApp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,25 +13,32 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val TAG = "MusicViewModel"
+
 @HiltViewModel
 class MusicViewModel @Inject constructor(
     private val musicRepository: MusicRepository,
     private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
-    init {
-        getRocks()
-//        getClassics()
-//        getPops()
-    }
-
     var fragmentState: Boolean = false
+
+    //    enum class Fragment { Rocks, Pops, Classics }
+//    var openRocksFragment: Boolean = true
+//    var openPopsFragment: Boolean = false
+//    var openClassicsFragment: Boolean = false
 
     private val _rock: MutableLiveData<UIState<MusicResponse>> = MutableLiveData(UIState.LOADING)
     val rock: LiveData<UIState<MusicResponse>> get() = _rock
 
-    private val _trackPreviewUrl: MutableLiveData<UIState<String>> = MutableLiveData(UIState.LOADING)
-    val trackPreviewUrl: LiveData<UIState<String>> get() = _trackPreviewUrl
+    private val _classic: MutableLiveData<UIState<MusicResponse>> = MutableLiveData(UIState.LOADING)
+    val classic: LiveData<UIState<MusicResponse>> get() = _classic
+
+    private val _pop: MutableLiveData<UIState<MusicResponse>> = MutableLiveData(UIState.LOADING)
+    val pop: LiveData<UIState<MusicResponse>> get() = _pop
+
+    private val _selectedTrackPreviewUrl: MutableLiveData<String> = MutableLiveData("")
+    val selectedTrackPreviewUrl: LiveData<String> get() = _selectedTrackPreviewUrl
 //    private val _rockDetails: MutableLiveData<UIState<Rock>?> = MutableLiveData(UIState.LOADING)
 //    val rockDetails: LiveData<UIState<Rock>> get() = _rockDetails
 
@@ -54,14 +62,43 @@ class MusicViewModel @Inject constructor(
         }
     }
 
-//    fun getTrackPreviewUrl(previewUrl: String? = null) {
-//       previewUrl ?.let {
-//            viewModelScope.launch(ioDispatcher) {
-////                    _trackPreviewUrl.postValue(UIState)
-//                _trackPreviewUrl = MutableLiveData<UIState<it>>
-//            }
+    fun getClassics() {
+        viewModelScope.launch(ioDispatcher) {
+            musicRepository.getClassics().collect {
+                _classic.postValue(it)
+            }
+        }
+    }
+
+    fun getPops() {
+        viewModelScope.launch(ioDispatcher) {
+            musicRepository.getPops().collect {
+                _pop.postValue(it)
+            }
+        }
+    }
+
+//    fun getMusic() {
+//        when {
+//            openRocksFragment -> getRocks()
+//            openPopsFragment -> getPops()
+//            openClassicsFragment -> getClassics()
+//            Fragment.Rocks -> getRocks()
+//            Fragment.Pops -> getPops()
+//            Fragment.Rocks -> getRocks()
 //        }
 //    }
+
+    init {
+//        getMusic()
+        getRocks()
+        getClassics()
+        getPops()
+    }
+    fun selectTrack(previewUrl: String) {
+        _selectedTrackPreviewUrl.value = previewUrl
+    }
+
 //    fun getRocks(id: String? = null) {
 //        id?.let {
 //            viewModelScope.launch(ioDispatcher) {

@@ -13,7 +13,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 open class BaseFragment : Fragment() {
 
-    protected var previewUrl : String = ""
     protected val musicViewModel: MusicViewModel by lazy {
         ViewModelProvider(requireActivity())[MusicViewModel::class.java]
     }

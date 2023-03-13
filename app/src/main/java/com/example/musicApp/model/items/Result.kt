@@ -36,7 +36,7 @@ data class Result(
     val country: String? = null,
     @Json(name = "currency")
     val currency: String? = null,
-    @Json(name = "discCount")
+    @Json(name = "previewUrl")
     val previewUrl: String? = null,
     @Json(name = "primaryGenreName")
     val primaryGenreName: String? = null,

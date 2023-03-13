@@ -24,11 +24,9 @@
         android:textStyle="bold" />
 
     <!--Widget for exoplayer view-->
-    <com.google.android.exoplayer2.ui.PlayerView
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/video_view"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:id="@+id/exoPlayerVIew"
-        android:layout_below="@id/idTVHeading"
-        android:layout_centerInParent="true" />
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>
